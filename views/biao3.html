@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+    <style>
+    *{
+        margin: 0;margin: 0;
+    }
+    .content{
+        width: 500px;
+        overflow: hidden;
+        margin: 50px auto;
+        padding-bottom: 20px;
+    }
+    .top_c{
+        width: 500px;height: 50px;
+        float: left;
+    }
+    .top_c dd{
+        width: 150px;height: 50px;
+        float: left;
+        text-align: center;
+        line-height:50px;
+        border: 1px solid black;
+    }
+    .di{
+        width: 100%;
+
+    }
+    .di_a{
+        width: 100%;height: 50px;
+        float: left;
+    }
+    .di_a dt{
+        width: 150px;height: 50px;
+        float: left;
+        text-align: center;
+        line-height:50px;
+        border: 1px solid black;
+    }
+    button{
+        width: 455px;height: 50px;
+        position: absolute;
+        left: 50%;
+        margin-left: -250px;
+        top: 0px;
+    }
+    </style>
+</head>
+<body>
+    <div class="content">
+        <div class="top_c">
+            <dd>姓名</dd>
+            <dd>年纪</dd>
+            <dd>删除</dd>
+        </div>
+        <div class="di">
+            {{each list}}
+            <div class="di_a">
+                <dt>{{$value.name}}</dt>
+                <dt>{{$value.age}}</dt>
+                <dt> <a href="http://localhost:3000/add?name={{$value.name}}&&age={{$value.age}}&&jian=true">删除</a> </dt>
+            </div>
+            {{/each}}
+        </div>
+    </div>
+    <button>添加</button>
+    <div class="tian">
+        <form action="http://localhost:3000/add" method="GET">
+            姓名：<input type="text" name="name" >
+            年纪：<input type="text" name="age">
+            <input type="submit" value="提交" >
+        </form>
+    </div>
+</body>
+</html>
