@@ -9,6 +9,7 @@
     <meta name="author" content="">
     <title>Signin Template for Bootstrap</title>
     <link href="https://cdn.bootcss.com/bootstrap/3.3.7/css/bootstrap.min.css" rel="stylesheet">
+    <script src="./js/jquery.min.js"></script>
  <style>
      .form-control{
        margin-top: 10px;
@@ -17,10 +18,11 @@
   </head>
   <body>
     <div class="container">
-      <form  action="http://localhost:3000/login" method="POST" class="form-signin" style="width:30% ;margin: 50px auto" >
+        <div class="fu" style="width:30% ;margin: 50px auto">
+      <!-- <form  action="http://localhost:3000/login" method="POST" class="form-signin" style="width:30% ;margin: 50px auto" > -->
         <h2 class="form-signin-heading" style="text-align: center;">登陆</h2>
         <label for="inputPassword" class="sr-only">username</label>
-        <input type="text" id="inputPassword" class="form-control" placeholder="username" name="username" required>
+        <input type="text" id="inputName" class="form-control" placeholder="username" name="username" required>
         <label for="inputPassword" class="sr-only">Password</label>
         <input type="password" id="inputPassword" class="form-control" placeholder="Password" name="password" required>
         <div class="checkbox">
@@ -28,9 +30,35 @@
             <input type="checkbox" value="remember-me"> Remember me
           </label>
         </div>
-        <button class="btn btn-lg btn-primary btn-block" type="submit">Sign in</button>
-      </form>
+        <button class="btn btn-lg btn-primary btn-block" id="btn" type="button">Sign in</button>
+      <!-- </form> -->
+    </div>
     </div> <!-- /container -->
-
+    <script>
+            $("#btn").click(function () {
+              $.ajax({
+                url: "http://localhost:3000/login",
+                dataType: "json",
+                type: "post",
+                async: false,
+                timeout: 2000,
+                data: {
+                  username: $("#inputName").val(),
+                  password: $("#inputPassword").val()
+                }
+              }).done((res)=>{
+                console.log(res)
+                if(res.status==1){
+                var  address=  prompt(res.result)
+                  if(address!=res.result){
+                    alert("验证码不正确")
+                  }else{
+                    alert("登陆成功")
+                    window.location.href="find"
+                  }
+                }
+              })
+            })
+          </script>
   </body>
 </html>

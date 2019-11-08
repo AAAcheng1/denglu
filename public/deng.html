@@ -10,7 +10,8 @@
     <title>Dashboard Template for Bootstrap</title>
     <!-- Bootstrap core CSS -->
     <link href="https://cdn.bootcss.com/bootstrap/3.3.7/css/bootstrap.min.css" rel="stylesheet">
-    <script src="./jquery.min.js"></script>
+    <script src="./js/jquery.min.js"></script>
+    <script src="./js/Cookie.js"></script>
      <style>
      .content{
        position: absolute;
@@ -24,23 +25,45 @@
      }
      .fonm_jia{
        width: 500px;
-       height: 800px;
+       height: 550px;
        margin: 100px auto;
+       background: white;
+       padding: 20px;
+       box-shadow: 1px 2px 5px 5px rgba(0, 0, 0, 0.2);
+       position: relative;
      }
-     
+     .cha{
+       width: 30px;height: 30px;
+       position: absolute;
+       font-size: 30px;
+       color: black;
+       top: 5px;
+       right: 0px;
+       transform: rotateZ(45deg);
+       cursor: pointer;
+     }
+     .tu_p{
+       width: 50px;height: 50px;
+       background: red;
+       float: left;
+       border-radius: 50%;
+       cursor: pointer;
+     }
      </style>
   </head>
   <body>
     <nav class="navbar navbar-inverse navbar-fixed-top">
       <div class="container-fluid">
         <div class="navbar-header">
-          <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar" aria-expanded="false" aria-controls="navbar">
-            <span class="sr-only">Toggle navigation</span>
-            <span class="icon-bar"></span>
-            <span class="icon-bar"></span>
-            <span class="icon-bar"></span>
-          </button>
-          <a class="navbar-brand" href="#">Project name</a>
+          <!-- 插入图片 -->
+          <div class="tu_p" >
+             <!-- <img src="../../../网页布局/咪咕/img/20181024173427341213.jpg" alt=""> -->
+          </div>
+          {{each cookies1}}
+          <a style="margin-left: 4px; color: white; "  class="navbar-brand" id="xinxi" href="#">
+           {{$value}}
+          </a>
+          {{/each}}
         </div>
         <div id="navbar" class="navbar-collapse collapse">
           <ul class="nav navbar-nav navbar-right">
@@ -107,15 +130,16 @@
                 </tr> -->
                 {{each list}}
                  <tr>
-                  <td>{{$value._id}}</td>
-                  <td>{{$value.name}}</td>
+                  <td >{{$value._id}}</td>
+                  <td id="getid">{{$value.name}}</td>
                   <td>{{$value.sex}}</td>
                   <td>{{$value.age}}</td>
                   <td>{{$value.adress}}</td>
                   <td style="padding: 5px;">
-                    <a href="http://localhost:3000/del?_id={{$value.name}}">
+                    <!-- <a href="http://localhost:3000/del?_id={{$value.name}}">
                      <input type="submit" value="删除" >
-                    </a>
+                    </a> -->
+                    <input type="button" value="删除" id="btn" class="btn1" toforId="{{$value.toforId}}"/>
                   </td>
                  </tr>
                 {{/each}}
@@ -126,22 +150,24 @@
       </div>
     </div>
     <div class="content" >
-        <form class="fonm_jia" action="http://localhost:3000/add" method="POST">
+        <!-- <form class="fonm_jia" action="http://localhost:3000/add" method="POST"> -->
+          <div class="fonm_jia">
+          <div class="cha">+</div>
             <div class="form-group">
               <label for="exampleInputEmail1">姓名</label>
-              <input type="text" class="form-control" id="exampleInputEmail1" placeholder="姓名" name="name">
+              <input type="text" class="form-control" id="exampleInputname" placeholder="姓名" name="name">
             </div>
             <div class="form-group">
               <label for="exampleInputPassword1">性别</label>
-              <input type="text" class="form-control" id="exampleInputPassword1" placeholder="性别" name="sex">
+              <input type="text" class="form-control" id="exampleInputsex" placeholder="性别" name="sex">
             </div>
             <div class="form-group">
               <label for="exampleInputPassword1">年纪</label>
-              <input type="text" class="form-control" id="exampleInputPassword1" placeholder="年纪" name="age">
+              <input type="text" class="form-control" id="exampleInputage" placeholder="年纪" name="age">
             </div>
             <div class="form-group">
               <label for="exampleInputPassword1">地址</label>
-              <input type="text" class="form-control" id="exampleInputPassword1" placeholder="地址" name="adress">
+              <input type="text" class="form-control" id="exampleInputadress" placeholder="地址" name="adress">
             </div>
             <div class="form-group">
               <label for="exampleInputFile">File input</label>
@@ -151,35 +177,84 @@
             <button id="tijiao"  class="btn btn-default">
               提交
             </button>
-          </form>
+          <!-- </form> -->
+        </div>
     </div>
     <script>
         $("#add_zeng").click(()=>{
-         $(".content").css("display","block")
+          $(".content").css("display","block")
         })
-        // $("#tijiao").click(()=>{
-        //   var name = $("#exampleInputEmail1").html()
-        //   var sex = $("#exampleInputPassword1").html()
-        //   var age  = $("#exampleInputPassword1").html()
-        //   var adress = $("#exampleInputPassword1").html()
-        //   var json1 = {
-        //     name,
-        //     sex,
-        //     age,
-        //     adress
-        //   }
-        //   console.log(json1)
-        //   // $.post("http://localhost:3000/add",json1)
-        //   $.ajax({
-        //     type:"post",
-        //     dataType:"json",
-        //     url:"http://localhost:3000/add",
-        //     data:json1,
-        //     complete:function(){
-        //       location.href="http://localhost:3000/add"
-        //     }
-        //   })
-        // })
+        $(".cha").click(()=>{
+          $(".content").css("display","none")
+        })
+
+        // 删除的ajax
+        $(".btn1").click(function(){
+          var toforId = $(this).attr("toforId")
+            $.ajax({
+                url: "http://localhost:3000/del",
+                dataType: "json",
+                type: "post",
+                async: false,
+                timeout: 2000,
+                data: {
+                  toforId:toforId,
+                  sanchu:1
+                }
+              }).done((res)=>{
+                console.log(res)
+                if(res.status==1){
+                  alert("删除成功")
+                  window.location.href="find"
+                }
+              })
+            
+          })
+
+          //提交增加的ajax
+        $("#tijiao").click(function(){
+          var name = $("#exampleInputname").val()
+          var sex = $("#exampleInputsex").val()
+          var age = $("#exampleInputage").val()
+          var adress = $("#exampleInputadress").val()
+            $.ajax({
+                url: "http://localhost:3000/add",
+                dataType: "json",
+                type: "post",
+                async: false,
+                timeout: 2000,
+                data: {
+                  name,
+                  sex,
+                  age,
+                  adress,
+                  zengjai:1
+                }
+              }).done((res)=>{
+                console.log(res)
+                if(res.status==1){
+                  alert("添加成功")
+                  window.location.href="find"
+                }
+              })
+            
+          })
+          //获取用户信息
+        $(".navbar-header").click(function(){
+          var username = $(".navbar-brand").html()
+          $.ajax({
+                url: "http://localhost:3000/findHu",
+                dataType: "json",
+                type: "post",
+                async: false,
+                timeout: 2000,
+                data: {
+                  username:username
+                }
+            }).done((res)=>{
+                  window.location.href="findHu"
+              })
+        })
     </script>
   </body>
 </html>

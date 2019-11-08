@@ -9,32 +9,73 @@
     <meta name="author" content="">
     <title>Signin Template for Bootstrap</title>
     <link href="https://cdn.bootcss.com/bootstrap/3.3.7/css/bootstrap.min.css" rel="stylesheet">
+    <script src="./js/jquery.min.js"></script>
  <style>
      .form-control{
        margin-top: 10px;
+     }
+     #diantou{
+       cursor: pointer;
      }
  </style>
   </head>
   <body>
     <div class="container">
-      <form  action="http://localhost:3000/reg" method="POST" class="form-signin" style="width:30% ;margin: 50px auto" >
+        <div style="width:30% ;margin: 50px auto">
+      <!-- <form id="form" > -->
         <h2 class="form-signin-heading">Please sign in</h2>
         <label for="inputPassword" class="sr-only">username</label>
-        <input type="text" id="inputPassword" class="form-control" placeholder="username" name="username" required>
+        <input type="text" id="inputname" class="form-control" placeholder="username" name="username" required>
         <label for="inputPassword" class="sr-only">Password</label>
         <input type="password" id="inputPassword" class="form-control" placeholder="Password" name="password" required>
         <label for="inputEmail" class="sr-only">Email address</label>
         <input type="email" id="inputEmail" class="form-control " placeholder="Email address" name="email" required autofocus>
         <label for="inputPassword" class="sr-only">Pyhon</label>
-        <input type="text" id="inputPassword" class="form-control" placeholder="Pyhon" name="phone" required>
+        <input type="text" id="inputPyhon" class="form-control" placeholder="Pyhon" name="phone" required>
         <div class="checkbox">
           <label>
             <input type="checkbox" value="remember-me"> Remember me
           </label>
         </div>
-        <button class="btn btn-lg btn-primary btn-block" type="submit">Sign in</button>
-      </form>
+        <div id="diantou" class="form-group" style="background: red; width: 80px;height: 80px;" >
+            <label for="exampleInputFile">File input</label>
+            <input type="file" id="exampleInputFile" style="visibility: hidden;">
+         </div>
+        <button class="btn btn-lg btn-primary btn-block" id="tijiao" type="submit">Sign in</button>
+      <!-- </form> -->
+    </div>
     </div> <!-- /container -->
+      <script>
 
+
+       $("#diantou").click(() => {
+          $("#exampleInputFile")[0].click()
+        })
+    $("#tijiao").click(function () {
+      var file = $("#exampleInputFile").val(); 
+      var arr = file.split('\\');//注split可以用字符或字符串分割 
+              $.ajax({
+                url: "http://localhost:3000/reg",
+                dataType: "json",
+                type: "post",
+                async: false,
+                timeout: 2000,
+                data: {
+                  username: $("#inputname").val(),
+                  password: $("#inputPassword").val(),
+                  email:$("#inputEmail").val(),
+                  phone:$("#inputPyhon").val(),
+                  pic:arr[arr.length-1]         //这就是要取得的图片名称 
+                }
+              }).done((res)=>{
+                console.log(res)
+                if(res.status==2){
+                  alert("注册成功")
+                  window.location.href="login.html"
+                }
+              })
+            })
+
+      </script>
   </body>
 </html>

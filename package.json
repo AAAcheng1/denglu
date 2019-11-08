@@ -12,9 +12,13 @@
   "dependencies": {
     "art-template": "^4.13.2",
     "body-parser": "^1.19.0",
+    "cookie-parser": "^1.4.4",
     "ejs": "^2.7.1",
     "express": "^4.17.1",
     "express-art-template": "^1.0.1",
-    "mongodb": "^3.3.3"
+    "express-session": "^1.17.0",
+    "formidable": "^1.2.1",
+    "mongodb": "^3.3.3",
+    "silly-datetime": "^0.1.2"
   }
 }
