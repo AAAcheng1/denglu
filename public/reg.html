@@ -46,35 +46,54 @@
     </div>
     </div> <!-- /container -->
       <script>
-
-
        $("#diantou").click(() => {
           $("#exampleInputFile")[0].click()
         })
-    $("#tijiao").click(function () {
-      var file = $("#exampleInputFile").val(); 
-      var arr = file.split('\\');//注split可以用字符或字符串分割 
-              $.ajax({
-                url: "http://localhost:3000/reg",
-                dataType: "json",
-                type: "post",
-                async: false,
-                timeout: 2000,
-                data: {
-                  username: $("#inputname").val(),
-                  password: $("#inputPassword").val(),
-                  email:$("#inputEmail").val(),
-                  phone:$("#inputPyhon").val(),
-                  pic:arr[arr.length-1]         //这就是要取得的图片名称 
-                }
-              }).done((res)=>{
-                console.log(res)
-                if(res.status==2){
-                  alert("注册成功")
-                  window.location.href="login.html"
-                }
-              })
+        //上传框的变化传后台
+        $("#exampleInputFile").change(function () {
+            var formdata = new FormData()
+            var file =  $("#exampleInputFile")[0].files[0]
+            formdata.append("pic",file)
+            formdata.append("username", $("#inputname").val())
+            console.log(formdata)
+            $.ajax({
+              url: "http://localhost:3000/pic",
+              dataType: "json",
+              type: "post",
+              async: true,
+              timeout: 2000,
+              cootentType: false,
+              processData: false,
+              data:formdata
+            }).done((res) => {
+              console.log(res)
+              if (res.status == 1) {
+                alert("保存图片")
+                window.location.href = "reg.html"
+              }
             })
+          })
+    $("#tijiao").click(function () {
+        $.ajax({
+          url: "http://localhost:3000/reg",
+          dataType: "json",
+          type: "post",
+          async: false,
+          timeout: 2000,
+          data: {
+            username: $("#inputname").val(),
+            password: $("#inputPassword").val(),
+            email: $("#inputEmail").val(),
+            phone: $("#inputPyhon").val()
+          }
+        }).done((res) => {
+          console.log(res)
+          if (res.status == 2) {
+            alert("注册成功")
+            window.location.href = "login.html"
+          }
+        })
+      })
 
       </script>
   </body>

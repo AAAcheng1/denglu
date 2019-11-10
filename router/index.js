@@ -2,11 +2,20 @@ var express = require("express")
 var router = express.Router();
 var db = require("../db")
 var  art = require("art-template")
+var path = require("path")
 
 //这是上传头像的引用
 var sd = require("silly-datetime");
 var form = require("formidable")
 var fs = require("fs")
+var multer = require("multer")
+//dest是指定上传的文件保存在那里。
+var objMulter = multer({dest: '../www/upload/'});
+var ser = express();
+  
+//any() 表示接受任何文件， single(‘表单name’)接受一个指定formname文件。
+ser.use(objMulter.any());
+
 //
 
 
@@ -18,6 +27,48 @@ router.all("*", (req, res, next) => {
 })
 
 
+//保存图片
+router.post("/pic",(req,res)=>{
+    /*
+     先把图片传进来保存在当前文件一下。利用缓存可以配合使用
+     从缓存中拿到图片名称。加上当地路径就可以配合使用
+    */ 
+   console.log(req,res)
+    var fm = form.IncomingForm();
+        //  fields 文本域   files 文件域  
+        // fm.uploadDir = "../public/uploads"
+        console.log(fm)
+        fm.parse(req, (err, fields, files) => {
+            if(err) throw err
+            var low = files.pic.path;
+            console.log(files)
+            console.log(low)
+            var extname = path.extname(files.pic.name);
+            var time = sd.format(new Date(), "YYYYMMDDHHmmss")
+            var fanishon = "./public/uploads/" + time + extname;
+            fs.rename(low, fanishon, err => {
+                if (err) throw err
+                res.send({
+                    status:1,
+                    msg: fanishon
+                })
+            })
+            
+            //  //新文件名
+            // // 这是重点，  新文件名 = path + 后缀名
+            // var newName = req.files[0].path + pathLib.parse(req.files[0].originalname).ext;
+            // // 使用fs模块的rename重命名方法重名字保存的文件，才能正常使用
+            // //rename('旧文件名，新文件， 回调 ')
+            // fs.rename(req.files[0].path, newName, function (err) {
+            //     if(err) {
+            //         res.send('上传失败')
+            //     }else{
+            //         res.send('上传成功')
+            //     }
+            //     res.end();
+            // })
+        })
+})
 
 //注册
 router.post("/reg", function (req, res) {
@@ -30,21 +81,7 @@ router.post("/reg", function (req, res) {
     */
     // console.log(req.body.pic)
 
-    // var fm = form.IncomingForm();
-    // //  fields 文本域   files 文件域  
-    // // console.log(fm)
-    // // console.log(fm.parse)
-    // fm.uploadDir = "../public/uploads"
-    // fm.parse(req, (err, fields, files) => {
-    //     var low = files.pic.path;
-    //     console.log(low)
-    //     var extname = path.extname(files.pic.name);
-    //     var time = sd.format(new Date(), "YYYYMMDDHHmmss")
-    //     var fanishon = "../public/uploads/" + time + extname;
-    //     fs.rename(low, fanishon, err => {
-    //         if (err) throw err
-    //     })
-    // })
+   
     db.find("student",{},(err1,data1)=>{
         if(err1)  throw err1 
     db.find("student", { username: req.body.username }, (err, data) => {
@@ -123,7 +160,6 @@ router.post("/login", function (req, res) {
                     //httpOnly 只允许在服务器修改cookie
                     //signed 是否生成签名  domain 域名  secure
                     res.cookie("username", obj, { maxAge: 9000000, httpOnly: true })
-                    console.log(req.cookies)
                     res.send({
                         status: 1,
                         msg: "登录成功",
@@ -166,7 +202,6 @@ router.post("/add", function (req, res) {
 })
 //查找
 router.get("/find",function (req, res) {
-    console.log(req.cookies.username)
         db.find("user1", {},(err2,data2)=>{
           if(err2) throw err2;
           res.render("../public/deng.html", { 
@@ -181,7 +216,6 @@ router.get("/find",function (req, res) {
 
 //删除
 router.post("/del",(req,res)=>{
-    console.log(req.body.toforId,{toforId:req.body.toforId})
     db.del("user1",{"toforId": parseInt(req.body.toforId) },(err)=>{
         if(err) throw err;
         res.send({
@@ -221,6 +255,65 @@ router.get("/findHu",(req,res)=>{
      })
     }
     })
+})
+
+//退出登陆
+router.post("/tuei",(req,res)=>{
+    var obj = req.body.username;
+    res.cookie("username", obj, { maxAge: -1, httpOnly: true })
+    db.find("student",{username:req.body.username},(err,data)=>{
+        if(err) throw err
+        else{
+            res.send({
+                status:1,
+                data:data[0]
+            })
+        }
+    })
+})
+
+//删除用户
+router.post("/shan",(req,res)=>{
+    db.del("student",{"cishu": parseInt(req.body.cishu) },(err)=>{
+        if(err) throw err;
+        res.send({
+            status: 1,
+            msg: "删除成功"
+        })
+    })
+})
+
+//查找用户
+
+router.post("/chazhao",(req,res)=>{
+    db.find("user1",{name:req.body.name},(err,data)=>{
+        if(err) throw err
+        else{
+            if(data.length == 0){
+                res.send({
+                    status:0,
+                    data:data
+                })
+            }else{
+                res.send({
+                    status:1,
+                    data:data
+                })
+            }
+           
+        }
+    })
+})
+router.get("/chazhao",(req,res)=>{
+    db.find("user1",{name:req.query.name},(err,data)=>{
+        if(err) throw err
+        else{
+            res.render("../public/chazhao.html", { 
+                list : data
+             })
+        }
+    })
+   
 })
 
 module.exports = router

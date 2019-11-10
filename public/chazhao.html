@@ -1,0 +1,43 @@
+
+<!DOCTYPE html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <!-- 上述3个meta标签*必须*放在最前面，任何其他内容都*必须*跟随其后！ -->
+    <meta name="description" content="">
+    <meta name="author" content="">
+    <title>Fixed Top Navbar Example for Bootstrap</title>
+    <link href="https://cdn.bootcss.com/bootstrap/3.3.7/css/bootstrap.min.css" rel="stylesheet">
+    <script src="./js/jquery.min.js"></script>
+  </head>
+  <body>
+    <div class="container">
+      <!-- Main component for a primary marketing message or call to action -->
+      {{each list}}
+      <div class="jumbotron" style="padding-top: 10px;padding-bottom: 10px; margin-top: 10px;">
+        <h1 style="font-size: 30px;">{{$value.name}}</h1>
+        <p style="margin-top: 20px;">
+                <span style="font-weight: 800;">性别:</span>{{$value.sex}}
+        </p>
+        <p>
+                <span style="font-weight: 800;">年纪:</span>{{$value.age}}
+        </p>
+        <p>
+              <span style="font-weight: 800;">地址:</span>{{$value.adress}}
+        </p>
+        <p>
+                <span style="font-weight: 800;">注册时间:</span>{{$value.createAt}}
+        </p>
+        <p>
+          <a class="btn btn-lg btn-primary" href="http://localhost:3000/find" role="button">返回 &raquo;</a>
+        </p>
+      </div>
+      {{/each}}
+    </div> <!-- /container -->
+    <script >
+    
+    </script>
+  </body>
+</html>

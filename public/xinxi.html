@@ -17,23 +17,24 @@
     <!-- Main jumbotron for a primary marketing message or call to action -->
     <div class="jumbotron">
       <div class="container">
-         
         <h1>Hello,
                 {{each username}}
                 {{$value}}
                 {{/each}}
         </h1>
         <p>欢迎光临</p>
-        <p><a class="btn btn-primary btn-lg" href="#" role="button">Learn more &raquo;</a></p>
+        <p>
+            <a class="btn btn-primary btn-lg" href="#" role="button">退出用户 &raquo;</a>
+            <a class="btn btn-primary btn-lg" href="#" role="button"  style="margin-left: 10px;">删除用户 &raquo;</a>
+        </p>
       </div>
     </div>
-
     <div class="container">
       <!-- Example row of columns -->
       <div class="row">
         <div class="col-md-3">
           <h2>用户名</h2>
-          <p> {{each list}}
+          <p id="username"> {{each list}}
                {{$value.username}}
                {{/each}}</p>
           <p><a class="btn btn-default" href="#" role="button">View details &raquo;</a></p>
@@ -61,8 +62,8 @@
         </div>
         <div class="col-md-2">
             <h2>排名</h2>
-            <p>{{each list}}
-                 {{$value.createAt}}
+            <p id="cishu">{{each list}}
+                 {{$value.cishu}}
                 {{/each}}</p>
             <p><a class="btn btn-default" href="#" role="button">View details &raquo;</a></p>
         </div>
@@ -72,5 +73,49 @@
         <p>&copy; 2016 Company, Inc.</p>
       </footer>
     </div> <!-- /container -->
+    <script>
+       $(".btn-primary").eq(0).click(function(){
+      var   username =  $("#username").html()
+        var isdron =   confirm("是否退出登录")
+         if(isdron){
+            $.ajax({
+                url: "http://localhost:3000/tuei",
+                dataType: "json",
+                type: "post",
+                async: false,
+                timeout: 2000,
+                data: {
+                  username:username
+                }
+            }).done((res)=>{
+                if(res.status == 1){
+                    alert("退出成功")
+                    window.location.href="login.html"
+                }
+              })
+         }
+       })
+       $(".btn-primary").eq(1).click(function(){
+      var   cishu =  $("#cishu").html()
+        var isdron =   confirm("是否删除用户")
+         if(isdron){
+            $.ajax({
+                url: "http://localhost:3000/shan",
+                dataType: "json",
+                type: "post",
+                async: false,
+                timeout: 2000,
+                data: {
+                    cishu:cishu
+                }
+            }).done((res)=>{
+                if(res.status == 1){
+                    alert("删除成功")
+                    window.location.href="reg.html"
+                }
+              })
+         }
+       })
+    </script>
   </body>
 </html>

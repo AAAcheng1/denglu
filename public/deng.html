@@ -12,6 +12,7 @@
     <link href="https://cdn.bootcss.com/bootstrap/3.3.7/css/bootstrap.min.css" rel="stylesheet">
     <script src="./js/jquery.min.js"></script>
     <script src="./js/Cookie.js"></script>
+    <script src="./js/验证url地址栏.js"></script>
      <style>
      .content{
        position: absolute;
@@ -49,6 +50,21 @@
        border-radius: 50%;
        cursor: pointer;
      }
+     .content1{
+       position: absolute;
+       top: 0px;
+       left: 0px;
+       width:100%;height: 100%;
+       background: rgba(0, 0, 0, 0.2);
+       display:none;
+       z-index: 888888;
+     }
+     .neikaung{
+         width: 500px;
+         height: 600px;
+         background: white;
+         margin:  50px auto;
+     }
      </style>
   </head>
   <body>
@@ -68,7 +84,7 @@
         <div id="navbar" class="navbar-collapse collapse">
           <ul class="nav navbar-nav navbar-right">
             <li><a href="#" style="padding-top: 0px; padding-bottom:0px; ">
-                    <input class="btn btn-default" type="submit" value="查找" style="padding:0px 14px;height: 30px;margin-top: 10px;">
+                    <input class="btn btn-default" type="submit" id="chazhao" value="查找" style="padding:0px 14px;height: 30px;margin-top: 10px;">
              <!-- 查抄 -->
             </a></li>
             <li><a href="#" style="padding-top: 0px; padding-bottom:0px; ">
@@ -78,7 +94,7 @@
             <li><a href="#">Help</a></li>
           </ul>
           <form class="navbar-form navbar-right">
-            <input type="text" class="form-control" placeholder="Search...">
+            <input type="text" id="chazhaoming" class="form-control" placeholder="Search...">
           </form>
         </div>
       </div>
@@ -86,7 +102,7 @@
 
     <div class="container-fluid" style="margin-top: 70px;">
       <div class="row">
-        <div class="col-sm-3 col-md-2 sidebar" style="float: left;">
+        <div class="col-sm-3 col-md-2 sidebar" style="float: left; border-right: 1px solid rgba(0, 0, 0,0.5)">
           <ul class="nav nav-sidebar">
             <li class="active"><a href="#">Overview <span class="sr-only">(current)</span></a></li>
             <li><a href="#">Reports</a></li>
@@ -253,6 +269,28 @@
                 }
             }).done((res)=>{
                   window.location.href="findHu"
+              })
+        })
+         
+        //查找姓名
+        $("#chazhao").click(function(){
+          var xingming = $("#chazhaoming").val();
+          $.ajax({
+                url: "http://localhost:3000/chazhao",
+                dataType: "json",
+                type: "post",
+                async: false,
+                timeout: 2000,
+                data: {
+                  name:xingming
+                }
+            }).done((res)=>{
+              if(res.status == 1){
+                alert("查询成功")
+                window.location.href=`chazhao?name=`+xingming
+              }else{
+                alert("没有该用户")
+              }
               })
         })
     </script>
